@@ -1,6 +1,6 @@
 export const metadata = {
-  title: "Neural Rebel // Portfolio OS",
-  description: "Interactive futuristic portfolio concept",
+  title: "MJ",
+  description: "MJ — AI Architect & Musician Portfolio",
 };
 
 import "./globals.css";

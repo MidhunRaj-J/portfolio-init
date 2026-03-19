@@ -8,30 +8,30 @@ export default function PremiumLogo({ className = '' }) {
     {
       id: 'm',
       d: 'M 14 100 L 14 18 L 40 54 L 66 18 L 66 64',
-      width: 8,
-      duration: 2,
+      width: 8.6,
+      duration: 3.2,
       delay: 0,
     },
     {
       id: 'j',
       d: 'M 89 18 L 89 80 C 89 96 78 107 62 107 C 49 107 40 98 40 85',
-      width: 8,
-      duration: 2,
-      delay: 0.12,
+      width: 8.6,
+      duration: 3.2,
+      delay: 0.24,
     },
     {
       id: 'wave',
       d: 'M 66 64 C 70 64 70 44 76 44 C 82 44 83 64 90 64 L 106 64',
-      width: 6.6,
-      duration: 1.6,
-      delay: 0.42,
+      width: 7.1,
+      duration: 2.6,
+      delay: 0.62,
     },
     {
       id: 'cap',
       d: 'M 89 18 L 105 18 L 105 39',
-      width: 6.8,
-      duration: 1.2,
-      delay: 0.3,
+      width: 7.2,
+      duration: 2.2,
+      delay: 0.52,
     },
   ];
 
@@ -41,8 +41,8 @@ export default function PremiumLogo({ className = '' }) {
       pathLength: 1,
       opacity: 1,
       transition: {
-        duration: 2,
-        ease: [0.25, 1, 0.5, 1],
+        duration: 3.4,
+        ease: [0.22, 1, 0.36, 1],
       },
     },
   };
@@ -70,50 +70,60 @@ export default function PremiumLogo({ className = '' }) {
           </linearGradient>
 
           <filter id="mj-soft-glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="1.7" />
+            <feGaussianBlur stdDeviation="1.95" />
           </filter>
         </defs>
 
-        {segments.map((segment) => (
-          <g key={segment.id} fill="none" strokeLinecap="round" strokeLinejoin="miter">
-            <motion.path
-              d={segment.d}
-              stroke="rgba(177, 231, 255, 0.45)"
-              strokeWidth={segment.width + 3.2}
-              filter="url(#mj-soft-glow)"
-              variants={pathVariants}
-              transition={{
-                duration: segment.duration,
-                delay: segment.delay,
-                ease: [0.25, 1, 0.5, 1],
-              }}
-            />
+        <motion.g
+          style={{ transformOrigin: '60px 60px' }}
+          initial={{ scaleX: 1.05 }}
+          animate={{ scaleX: 1.13, y: [0, -0.6, 0] }}
+          transition={{
+            scaleX: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+            y: { duration: 6.4, ease: 'easeInOut', repeat: Infinity },
+          }}
+        >
+          {segments.map((segment) => (
+            <g key={segment.id} fill="none" strokeLinecap="round" strokeLinejoin="miter">
+              <motion.path
+                d={segment.d}
+                stroke="rgba(177, 231, 255, 0.45)"
+                strokeWidth={segment.width + 3.4}
+                filter="url(#mj-soft-glow)"
+                variants={pathVariants}
+                transition={{
+                  duration: segment.duration,
+                  delay: segment.delay,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              />
 
-            <motion.path
-              d={segment.d}
-              stroke="url(#mj-stroke)"
-              strokeWidth={segment.width}
-              variants={pathVariants}
-              transition={{
-                duration: segment.duration,
-                delay: segment.delay,
-                ease: [0.25, 1, 0.5, 1],
-              }}
-            />
+              <motion.path
+                d={segment.d}
+                stroke="url(#mj-stroke)"
+                strokeWidth={segment.width}
+                variants={pathVariants}
+                transition={{
+                  duration: segment.duration,
+                  delay: segment.delay,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              />
 
-            <motion.path
-              d={segment.d}
-              stroke="var(--logo-cut, #0b1120)"
-              strokeWidth={Math.max(2.4, segment.width - 3)}
-              variants={pathVariants}
-              transition={{
-                duration: segment.duration,
-                delay: segment.delay,
-                ease: [0.25, 1, 0.5, 1],
-              }}
-            />
-          </g>
-        ))}
+              <motion.path
+                d={segment.d}
+                stroke="var(--logo-cut, #0b1120)"
+                strokeWidth={Math.max(2.4, segment.width - 3.1)}
+                variants={pathVariants}
+                transition={{
+                  duration: segment.duration,
+                  delay: segment.delay,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              />
+            </g>
+          ))}
+        </motion.g>
       </motion.svg>
     </div>
   );

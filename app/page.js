@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "framer-motion";
+import Marquee from "react-fast-marquee";
 import AnimatedLogo from "../AnimatedLogo";
 
 const revealPanels = [
-  { id: "panel-1", kicker: "Product Reveal", title: "AI Systems, with swagger.", sub: "One bold idea per scroll." },
-  { id: "panel-2", kicker: "Built by MJ", title: "Code x Canvas x Raga.", sub: "Precision outside, playful core." },
+  { id: "panel-1", kicker: "Product Reveal", title: "Hi, I'm MJ. Welcome to my digital workspace.", sub: "Building intelligent AI systems with personality. Let's explore some bold ideas." },
+  { id: "panel-2", kicker: "Built by MJ", title: "Fusing Code, Design, and Carnatic Music.", sub: "I build precise, production-ready systems with playful, highly interactive user interfaces." },
   { id: "panel-3", kicker: "Focus", title: "Show, then smile.", sub: "Motion, interaction, personality." },
 ];
 
@@ -18,8 +20,7 @@ const projects = [
     line: "Signals become decisions in real time.",
     previewA: "Event mesh flow",
     previewB: "Routing telemetry",
-    mood: "serious engine, mischievous UI",
-    swara: 261.63,
+    mood: "A robust data engine paired with a highly dynamic, intuitive interface.",
   },
   {
     id: "swara",
@@ -27,8 +28,7 @@ const projects = [
     line: "Expressive melodic motion from intent.",
     previewA: "Raga phrase orbit",
     previewB: "Pitch glide engine",
-    mood: "classical soul, future controls",
-    swara: 329.63,
+    mood: "Classical Indian music theory driven by modern generative algorithms.",
   },
   {
     id: "morse",
@@ -37,7 +37,6 @@ const projects = [
     previewA: "Interactive level gate",
     previewB: "Signal timeline",
     mood: "game energy, clean craft",
-    swara: 392.0,
   },
   {
     id: "energy",
@@ -45,8 +44,7 @@ const projects = [
     line: "V2G simulations for smarter campus power.",
     previewA: "Grid optimization pass",
     previewB: "Scenario simulator",
-    mood: "research brain, product speed",
-    swara: 440.0,
+    mood: "Academic-grade power grid simulations built with production-level speed.",
   },
   {
     id: "mood-music",
@@ -55,7 +53,6 @@ const projects = [
     previewA: "Mood detect panel",
     previewB: "Playlist handoff",
     mood: "lightweight, fun, useful",
-    swara: 493.88,
   },
 ];
 
@@ -85,144 +82,25 @@ const atmosphereFrames = [
   { id: "frame-3", label: "Sunset frame 03" },
 ];
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: "easeOut" },
+  },
+};
+
 export default function Page() {
   const root = useRef(null);
-  const audioReadyRef = useRef(false);
-  const audioNodesRef = useRef(null);
   const floatingLogoRef = useRef(null);
   const burstTimeoutRef = useRef(null);
 
-  const [isPlaying, setIsPlaying] = useState(false);
   const [showFloatingLogo, setShowFloatingLogo] = useState(false);
   const [logoBurst, setLogoBurst] = useState(false);
   const [activeProject, setActiveProject] = useState(projects[0].id);
   const [githubProfile, setGithubProfile] = useState(null);
   const [githubRepos, setGithubRepos] = useState([]);
-
-  const ensureAudio = () => {
-    if (audioReadyRef.current) {
-      return audioNodesRef.current;
-    }
-
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const context = new AudioCtx();
-
-    const master = context.createGain();
-    master.gain.value = 0.2;
-    master.connect(context.destination);
-
-    const lowpass = context.createBiquadFilter();
-    lowpass.type = "lowpass";
-    lowpass.frequency.value = 1100;
-    lowpass.Q.value = 0.8;
-    lowpass.connect(master);
-
-    audioNodesRef.current = {
-      context,
-      master,
-      lowpass,
-      beatInterval: null,
-      hatInterval: null,
-    };
-
-    audioReadyRef.current = true;
-    return audioNodesRef.current;
-  };
-
-  const playTone = (graph, frequency, duration = 0.36, gainValue = 0.08, type = "triangle") => {
-    const now = graph.context.currentTime;
-    const osc = graph.context.createOscillator();
-    const gain = graph.context.createGain();
-
-    osc.type = type;
-    osc.frequency.value = frequency;
-
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(gainValue, now + 0.03);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
-
-    osc.connect(gain);
-    gain.connect(graph.lowpass);
-
-    osc.start(now);
-    osc.stop(now + duration + 0.05);
-  };
-
-  const playSwaraHover = async (frequency) => {
-    const graph = ensureAudio();
-    if (graph.context.state !== "running") {
-      await graph.context.resume();
-    }
-
-    playTone(graph, frequency, 0.32, 0.06, "sine");
-    playTone(graph, frequency * 1.5, 0.18, 0.04, "triangle");
-  };
-
-  const toggleLofi = async () => {
-    const graph = ensureAudio();
-    const chordProgression = [
-      [130.81, 164.81, 196.0],
-      [110.0, 138.59, 174.61],
-      [87.31, 110.0, 130.81],
-      [98.0, 123.47, 155.56],
-    ];
-    const bassLine = [65.41, 65.41, 55.0, 55.0, 43.65, 43.65, 49.0, 49.0];
-
-    const playHat = () => {
-      const now = graph.context.currentTime;
-      const bufferSize = graph.context.sampleRate * 0.045;
-      const noiseBuffer = graph.context.createBuffer(1, bufferSize, graph.context.sampleRate);
-      const output = noiseBuffer.getChannelData(0);
-
-      for (let i = 0; i < bufferSize; i += 1) {
-        output[i] = (Math.random() * 2 - 1) * 0.24;
-      }
-
-      const noise = graph.context.createBufferSource();
-      noise.buffer = noiseBuffer;
-
-      const bandpass = graph.context.createBiquadFilter();
-      bandpass.type = "bandpass";
-      bandpass.frequency.value = 6000;
-      bandpass.Q.value = 2;
-
-      const gain = graph.context.createGain();
-      gain.gain.setValueAtTime(0.06, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
-
-      noise.connect(bandpass);
-      bandpass.connect(gain);
-      gain.connect(graph.master);
-      noise.start(now);
-      noise.stop(now + 0.05);
-    };
-
-    if (!graph.beatInterval) {
-      let chordStep = 0;
-      let bassStep = 0;
-      const quarterMs = 800;
-
-      graph.beatInterval = window.setInterval(() => {
-        const chord = chordProgression[chordStep % chordProgression.length];
-        chord.forEach((frequency) => playTone(graph, frequency, 1.58, 0.075, "triangle"));
-        playTone(graph, bassLine[bassStep % bassLine.length], 0.4, 0.095, "sine");
-        chordStep += 1;
-        bassStep += 1;
-      }, quarterMs * 2);
-
-      graph.hatInterval = window.setInterval(() => {
-        playHat();
-      }, quarterMs / 2);
-    }
-
-    if (isPlaying) {
-      await graph.context.suspend();
-      setIsPlaying(false);
-    } else {
-      await graph.context.resume();
-      setIsPlaying(true);
-    }
-  };
 
   const handleFloatingLogoClick = () => {
     setLogoBurst(true);
@@ -398,14 +276,6 @@ export default function Page() {
 
   useEffect(() => {
     return () => {
-      if (audioNodesRef.current) {
-        window.clearInterval(audioNodesRef.current.beatInterval);
-        window.clearInterval(audioNodesRef.current.hatInterval);
-        audioNodesRef.current.master?.disconnect();
-        audioNodesRef.current.lowpass?.disconnect();
-        audioNodesRef.current.context?.close();
-      }
-
       if (burstTimeoutRef.current) {
         window.clearTimeout(burstTimeoutRef.current);
       }
@@ -435,7 +305,7 @@ export default function Page() {
           <span className="reveal-orb ro-3" />
         </div>
         <AnimatedLogo className="reveal-logo" />
-        <p className="reveal-sticker">yes, this portfolio hums</p>
+        <p className="reveal-sticker">Midhun Raj | Digital Portfolio</p>
         <p className="reveal-stage-kicker">Midhun Raj · MJ</p>
       </section>
 
@@ -463,27 +333,43 @@ export default function Page() {
         </div>
       </section>
 
-      <section className="identity-block" aria-label="Identity statement">
+      <motion.section
+        className="identity-block"
+        aria-label="Identity statement"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.25 }}
+      >
         <p className="identity-line">AI Product Engineer. Creative Technologist. Violin-first builder.</p>
         <div className="identity-tags" aria-label="Identity tags">
           <span className="identity-tag">Realtime Interfaces</span>
           <span className="identity-tag">Carnatic Audio Systems</span>
           <span className="identity-tag">Cinematic Product Design</span>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="readme-block" aria-label="README identity details">
+      <motion.section
+        className="readme-block"
+        aria-label="README identity details"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.25 }}
+      >
         <p className="readme-title">From my GitHub README</p>
         <p className="equation-line">½ Developer + ½ Event Organiser + ½ Musician = Me.</p>
-        <p className="vibe-line">Current vibe: production-ready MERN builds + hybrid renewable energy research.</p>
+        <p className="vibe-line">Fusing Code, Design, and Carnatic Music. I build precise, production-ready systems that feature playful, highly interactive user interfaces.</p>
         <p className="thought-line">“I’ll sleep early tonight” usually becomes debugging code or arranging chords at 2 AM.</p>
 
-        <div className="toolbox-grid" aria-label="Tech toolbox">
-          {toolbox.map((item) => (
-            <span key={item} className="tool-chip">
-              {item}
-            </span>
-          ))}
+        <div className="toolbox-grid" aria-label="Tech toolbox marquee">
+          <Marquee speed={42} gradient={false} pauseOnHover>
+            {toolbox.map((item) => (
+              <span key={item} className="tool-chip marquee-chip">
+                {item}
+              </span>
+            ))}
+          </Marquee>
         </div>
 
         <div className="github-pulse" aria-label="GitHub pulse">
@@ -506,9 +392,16 @@ export default function Page() {
             </ul>
           </article>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="projects-block" aria-label="Selected project previews">
+      <motion.section
+        className="projects-block"
+        aria-label="Selected project previews"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="projects-head">
           <p>Selected Work</p>
           <h2>Interactive previews over long explanations.</h2>
@@ -521,11 +414,9 @@ export default function Page() {
               className={`project-card${activeProject === project.id ? " is-active" : ""}`}
               onMouseEnter={() => {
                 setActiveProject(project.id);
-                playSwaraHover(project.swara);
               }}
               onFocus={() => {
                 setActiveProject(project.id);
-                playSwaraHover(project.swara);
               }}
               tabIndex={0}
               aria-label={project.name}
@@ -533,24 +424,33 @@ export default function Page() {
               <span className="goofy-spark gs-1" aria-hidden="true" />
               <span className="goofy-spark gs-2" aria-hidden="true" />
               <p className="project-name">{project.name}</p>
-              <h3>{project.line}</h3>
-              <p className="project-mood">{project.mood}</p>
-              <div className="project-preview" aria-hidden="true">
-                <div className="preview-panel">
-                  <span>{project.previewA}</span>
-                  <div className="preview-wave" />
-                </div>
-                <div className="preview-panel alt">
-                  <span>{project.previewB}</span>
-                  <div className="preview-grid-scan" />
+              <div className="project-reveal-wrap">
+                <h3>{project.line}</h3>
+                <p className="project-mood">{project.mood}</p>
+                <div className="project-preview" aria-hidden="true">
+                  <div className="preview-panel">
+                    <span>{project.previewA}</span>
+                    <div className="preview-wave" />
+                  </div>
+                  <div className="preview-panel alt">
+                    <span>{project.previewB}</span>
+                    <div className="preview-grid-scan" />
+                  </div>
                 </div>
               </div>
             </article>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="community-block" aria-label="Community orchestration">
+      <motion.section
+        className="community-block"
+        aria-label="Community orchestration"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.25 }}
+      >
         <p className="community-title">Building Community / Orchestrating Events</p>
         <p className="community-sub">Designing real-world momentum, with just the right amount of chaos.</p>
         <div className="community-strip" aria-label="Community highlights">
@@ -561,7 +461,7 @@ export default function Page() {
           ))}
         </div>
         <p className="community-note">For college fests, chapter ecosystems, and hack nights where ideas become demos overnight.</p>
-      </section>
+      </motion.section>
 
       <footer className="cine-contact" aria-label="Contact">
         <div className="contact-objects" aria-hidden="true">
@@ -596,15 +496,6 @@ export default function Page() {
             <a className="contact-link" href="https://instagram.com/midhunraj_j" target="_blank" rel="noreferrer">
               Instagram
             </a>
-            <button
-              type="button"
-              className="cine-play"
-              onClick={toggleLofi}
-              aria-label={isPlaying ? "Pause lo-fi track" : "Play lo-fi track"}
-            >
-              <span className="play-icon" aria-hidden="true" />
-              {isPlaying ? "Pause" : "Play"}
-            </button>
           </div>
         </div>
       </footer>

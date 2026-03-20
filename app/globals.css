@@ -1619,39 +1619,6 @@ button {
   outline: none;
 }
 
-.cine-play {
-  border: 1px solid rgba(214, 226, 255, 0.32);
-  background: linear-gradient(130deg, rgba(214, 226, 255, 0.08), rgba(159, 140, 255, 0.1));
-  border-radius: 999px;
-  min-width: 116px;
-  height: 44px;
-  color: rgba(236, 241, 255, 0.95);
-  transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.61rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  cursor: pointer;
-  transition: background 220ms ease, border-color 220ms ease;
-}
-
-.cine-play:hover,
-.cine-play:focus-visible {
-  border-color: rgba(214, 226, 255, 0.6);
-  background: linear-gradient(130deg, rgba(214, 226, 255, 0.16), rgba(159, 140, 255, 0.2));
-  outline: none;
-}
-
-.play-icon {
-  width: 9px;
-  height: 9px;
-  border-radius: 100%;
-  background: rgba(236, 241, 255, 0.92);
-}
-
 @keyframes bounceBar {
   0%,
   100% {
@@ -2058,7 +2025,7 @@ button {
 
 .reveal-title {
   margin: 0;
-  max-width: 18ch;
+  max-width: 24ch;
   font-family: "Space Grotesk", sans-serif;
   font-size: clamp(2.3rem, 10vw, 8rem);
   letter-spacing: -0.04em;
@@ -2078,7 +2045,7 @@ button {
   margin: 0;
   font-size: 0.66rem;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
+  text-transform: none;
   color: rgba(241, 255, 217, 0.92);
   border: 1px dashed rgba(199, 255, 110, 0.55);
   border-radius: 999px;
@@ -2127,7 +2094,7 @@ button {
   border-radius: 16px;
   overflow: hidden;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   padding: 0.85rem;
   background:
     linear-gradient(to top, rgba(6, 9, 18, 0.82), rgba(6, 9, 18, 0.02)),
@@ -2229,6 +2196,10 @@ button {
   background: linear-gradient(110deg, rgba(73, 231, 255, 0.12), rgba(192, 132, 255, 0.14));
 }
 
+.marquee-chip {
+  margin-right: 0.5rem;
+}
+
 .github-pulse {
   margin-top: 0.7rem;
   display: grid;
@@ -2264,11 +2235,27 @@ button {
   padding: 0;
   display: grid;
   gap: 0.26rem;
+  width: 100%;
 }
 
 .pulse-card.repo-list li {
   font-size: 0.78rem;
   color: rgba(235, 241, 255, 0.88);
+  overflow-wrap: anywhere;
+  text-align: left;
+  line-height: 1.4;
+}
+
+.pulse-card.repo-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.pulse-card.repo-list p {
+  width: 100%;
+  text-align: left;
 }
 
 .projects-block {
@@ -2305,6 +2292,7 @@ button {
   transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
   cursor: pointer;
   position: relative;
+  overflow: hidden;
 }
 
 .project-card:nth-child(odd) {
@@ -2336,14 +2324,34 @@ button {
   margin: 0.54rem 0 0;
   font-size: clamp(1.06rem, 2vw, 1.42rem);
   line-height: 1.24;
+  overflow-wrap: anywhere;
+}
+
+.project-reveal-wrap {
+  opacity: 0;
+  transform: translateY(10px);
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 260ms ease, transform 260ms ease, max-height 260ms ease;
+}
+
+.project-card:hover .project-reveal-wrap,
+.project-card:focus-visible .project-reveal-wrap,
+.project-card.is-active .project-reveal-wrap {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 720px;
+  overflow: visible;
 }
 
 .project-mood {
   margin: 0.45rem 0 0;
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: rgba(240, 237, 255, 0.68);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .goofy-spark {
@@ -2510,4 +2518,151 @@ button {
   .github-pulse {
     grid-template-columns: 1fr;
   }
+}
+
+/* --- Alignment Stabilization --- */
+
+.toolbox-grid {
+  display: block;
+}
+
+.github-pulse {
+  align-items: stretch;
+}
+
+.pulse-card {
+  height: 100%;
+}
+
+.projects-grid {
+  align-items: stretch;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transform: none;
+}
+
+.project-card:nth-child(odd),
+.project-card:nth-child(even) {
+  transform: none;
+}
+
+.project-card:hover,
+.project-card:focus-visible,
+.project-card.is-active {
+  transform: translateY(-4px);
+}
+
+.project-reveal-wrap {
+  width: 100%;
+}
+
+.project-preview {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cine-contact {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.contact-panel,
+.contact-actions {
+  width: 100%;
+}
+
+.contact-actions {
+  justify-items: start;
+  align-content: start;
+}
+
+.cine-mail {
+  text-align: left;
+  line-height: 1.05;
+}
+
+.contact-action-row {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1200px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .github-pulse {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .project-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-action-row {
+    width: 100%;
+  }
+}
+
+/* --- Overflow Safety Net --- */
+
+.cine-page,
+.cine-page section,
+.cine-page article,
+.cine-page div,
+.cine-page p,
+.cine-page h1,
+.cine-page h2,
+.cine-page h3,
+.cine-page a,
+.cine-page span,
+.cine-page li {
+  min-width: 0;
+}
+
+.reveal-title,
+.reveal-sub,
+.equation-line,
+.vibe-line,
+.thought-line,
+.community-title,
+.community-sub,
+.community-note,
+.project-name,
+.project-card h3,
+.project-mood,
+.pulse-card p,
+.pulse-card strong,
+.pulse-card.repo-list li,
+.contact-panel h3,
+.cine-mail,
+.contact-link {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.toolbox-grid {
+  overflow: hidden;
+}
+
+.toolbox-grid > div {
+  max-width: 100%;
+}
+
+.github-pulse,
+.projects-grid,
+.project-preview,
+.contact-action-row {
+  width: 100%;
+}
+
+.project-reveal-wrap,
+.project-card:hover .project-reveal-wrap,
+.project-card:focus-visible .project-reveal-wrap,
+.project-card.is-active .project-reveal-wrap {
+  overflow: hidden;
 }

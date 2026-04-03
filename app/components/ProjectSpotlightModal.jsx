@@ -32,6 +32,7 @@ export default function ProjectSpotlightModal({ project, onClose }) {
         <p className="spotlight-kicker">Project Spotlight</p>
         <h3>{project.name}</h3>
         <p className="spotlight-line">{project.line}</p>
+        {project.featured && <p className="spotlight-featured">{project.featured}</p>}
 
         <div className="spotlight-grid">
           <article>

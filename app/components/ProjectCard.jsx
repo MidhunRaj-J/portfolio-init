@@ -25,6 +25,7 @@ export default function ProjectCard({ project, isActive, onActivate, onOpen }) {
       <div className="project-reveal-wrap">
         <h3>{project.line}</h3>
         <p className="project-mood">{project.mood}</p>
+        {project.featured && <p className="project-featured">{project.featured}</p>}
         <div className="project-preview" aria-hidden="true">
           <div className="preview-panel">
             <span>{project.previewA}</span>

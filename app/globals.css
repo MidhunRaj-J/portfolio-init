@@ -2553,6 +2553,14 @@ button {
   overflow-wrap: anywhere;
 }
 
+.project-featured {
+  margin: 0.45rem 0 0;
+  font-size: 0.66rem;
+  line-height: 1.55;
+  color: rgba(190, 228, 255, 0.86);
+  overflow-wrap: anywhere;
+}
+
 .spotlight-modal {
   position: fixed;
   inset: 0;
@@ -2600,6 +2608,14 @@ button {
   margin: 0.6rem 0 0;
   color: rgba(240, 237, 255, 0.88);
   line-height: 1.55;
+}
+
+.spotlight-featured {
+  margin: 0.5rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.55;
+  color: rgba(190, 228, 255, 0.86);
+  overflow-wrap: anywhere;
 }
 
 .spotlight-grid {
@@ -2971,6 +2987,7 @@ button {
 .project-name,
 .project-card h3,
 .project-mood,
+.project-featured,
 .pulse-card p,
 .pulse-card strong,
 .pulse-card.repo-list li,
@@ -3001,4 +3018,9 @@ button {
 .project-card:focus-visible .project-reveal-wrap,
 .project-card.is-active .project-reveal-wrap {
   overflow: hidden;
+}
+
+.spotlight-line,
+.spotlight-featured {
+  overflow-wrap: anywhere;
 }

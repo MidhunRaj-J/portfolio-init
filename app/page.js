@@ -6,57 +6,87 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
 import Marquee from "react-fast-marquee";
 import AnimatedLogo from "../AnimatedLogo";
+import HeroCtaButtons from "./components/HeroCtaButtons";
+import ProjectCard from "./components/ProjectCard";
+import ProjectSpotlightModal from "./components/ProjectSpotlightModal";
+import CommandPalette from "./components/CommandPalette";
+import ScrollStoryTimeline from "./components/ScrollStoryTimeline";
 
 const revealPanels = [
-  { id: "panel-1", kicker: "Product Reveal", title: "Hi, I'm MJ. Welcome to my digital workspace.", sub: "Building intelligent AI systems with personality. Let's explore some bold ideas." },
-  { id: "panel-2", kicker: "Built by MJ", title: "Fusing Code, Design, and Carnatic Music.", sub: "I build precise, production-ready systems with playful, highly interactive user interfaces." },
-  { id: "panel-3", kicker: "Focus", title: "Show, then smile.", sub: "Motion, interaction, personality." },
+  { id: "panel-1", kicker: "Product Engineer", title: "I build AI products that are fast, useful, and memorable.", sub: "From idea to interface, I turn complex workflows into clear interactions." },
+  { id: "panel-2", kicker: "Built by MJ", title: "Code, design, and Carnatic thinking in one workflow.", sub: "I ship production-ready systems with strong UX, clean architecture, and a distinctive product voice." },
+  { id: "panel-3", kicker: "Focus", title: "Solve real problems, then make it feel effortless.", sub: "Reliable engineering, thoughtful motion, and details that earn trust." },
 ];
 
 const projects = [
   {
-    id: "ai-os",
-    name: "AI Operations OS",
-    line: "Signals become decisions in real time.",
-    previewA: "Event mesh flow",
-    previewB: "Routing telemetry",
-    mood: "A robust data engine paired with a highly dynamic, intuitive interface.",
+    id: "nexusfleet",
+    name: "NexusFleet",
+    line: "P2P delivery platform that connects travelers with people who need items moved.",
+    previewA: "Travel match flow",
+    previewB: "Delivery routing",
+    mood: "Role: Product build · Stack: MERN stack · Outcome: a clearer delivery handoff flow.",
+    problem: "People needed a simple way to move items through trusted traveler handoffs.",
+    approach: "Designed the request, match, and handoff flow around a marketplace-style delivery experience.",
+    impact: "Turns a logistics problem into a straightforward exchange flow.",
+    role: "Product + Full-stack",
+    stack: "MongoDB, Express, React, Node",
   },
   {
-    id: "swara",
-    name: "Carnatic Swara Generator",
-    line: "Expressive melodic motion from intent.",
-    previewA: "Raga phrase orbit",
-    previewB: "Pitch glide engine",
-    mood: "Classical Indian music theory driven by modern generative algorithms.",
+    id: "neuro-bridge",
+    name: "Neuro-Bridge",
+    line: "Health chatbot for people with speech difficulties using LLM support.",
+    previewA: "Assistive care flow",
+    previewB: "LLM response path",
+    mood: "Role: AI prototype · Stack: Python + Groq + LLaMA · Outcome: more accessible conversation support.",
+    problem: "Communication support tools needed a more inclusive conversational path.",
+    approach: "Built an AI assistant workflow geared toward speech-impaired users.",
+    impact: "Makes support interactions feel more usable and less effortful.",
+    role: "AI application design",
+    stack: "Python, Groq, LLaMA",
   },
   {
-    id: "morse",
-    name: "Morse Mystique",
-    line: "Puzzle logic with kinetic audio cues.",
-    previewA: "Interactive level gate",
-    previewB: "Signal timeline",
-    mood: "game energy, clean craft",
+    id: "lyra-audio-to-midi-converter",
+    name: "Lyra Audio to MIDI Converter",
+    line: "Converts audio ideas into MIDI-friendly musical sketches.",
+    previewA: "Audio analysis",
+    previewB: "MIDI export",
+    mood: "Role: Music tooling · Stack: Jupyter Notebook + Python · Outcome: faster melody extraction.",
+    problem: "Moving from audio inspiration to MIDI ideas is tedious by hand.",
+    approach: "Explored audio-to-MIDI conversion in a notebook workflow.",
+    impact: "Speeds up early composition and transcription experiments.",
+    role: "Audio tooling + prototyping",
+    stack: "Python, Jupyter Notebook",
   },
   {
-    id: "energy",
-    name: "Energy Research",
-    line: "V2G simulations for smarter campus power.",
-    previewA: "Grid optimization pass",
-    previewB: "Scenario simulator",
-    mood: "Academic-grade power grid simulations built with production-level speed.",
+    id: "phantom-signal",
+    name: "Phantom-Signal",
+    line: "A Python project with a signal-and-pattern theme.",
+    previewA: "Signal trace",
+    previewB: "Pattern scan",
+    mood: "Role: Experimental build · Stack: Python · Outcome: a compact signal-driven prototype.",
+    problem: "Some ideas work best as small experiments before they become larger systems.",
+    approach: "Used a lightweight Python prototype to explore signal logic and interaction patterns.",
+    impact: "Keeps the concept sharp while staying easy to iterate on.",
+    role: "Experimentation + Python engineering",
+    stack: "Python, lightweight logic, prototyping",
   },
   {
-    id: "mood-music",
-    name: "Mood Music",
-    line: "Emotion-to-track recommendation playground.",
+    id: "emotion-based-music-recommender",
+    name: "Emotion-based-Music-recommender",
+    line: "Maps emotion signals to music recommendations.",
     previewA: "Mood detect panel",
     previewB: "Playlist handoff",
-    mood: "lightweight, fun, useful",
+    mood: "Role: Frontend prototype · Stack: HTML UI + recommendation flow · Outcome: quicker music discovery.",
+    problem: "Generic playlists do not always match the listener's mood.",
+    approach: "Built a lightweight recommendation flow driven by emotion state.",
+    impact: "Delivers quicker music choices with less friction.",
+    role: "UI + recommendation flow",
+    stack: "HTML, CSS, JavaScript",
   },
 ];
 
-const communityMoments = ["Hack Arcade", "Student Chapters", "Campus Build Nights"];
+const communityMoments = ["Hackathons", "Student Chapters", "Campus Build Nights"];
 
 const toolbox = [
   "C",
@@ -99,6 +129,7 @@ export default function Page() {
   const [showFloatingLogo, setShowFloatingLogo] = useState(false);
   const [logoBurst, setLogoBurst] = useState(false);
   const [activeProject, setActiveProject] = useState(projects[0].id);
+  const [spotlightProject, setSpotlightProject] = useState(null);
   const [githubProfile, setGithubProfile] = useState(null);
   const [githubRepos, setGithubRepos] = useState([]);
 
@@ -264,7 +295,7 @@ export default function Page() {
         const repos = await reposRes.json();
 
         setGithubProfile(profile || null);
-        setGithubRepos(Array.isArray(repos) ? repos.slice(0, 4) : []);
+        setGithubRepos(Array.isArray(repos) ? repos.slice(0, 5) : []);
       } catch {
         setGithubProfile(null);
         setGithubRepos([]);
@@ -284,6 +315,8 @@ export default function Page() {
 
   return (
     <main ref={root} className="cine-page">
+      <CommandPalette projects={projects} />
+
       <button
         ref={floatingLogoRef}
         type="button"
@@ -306,6 +339,7 @@ export default function Page() {
         </div>
         <AnimatedLogo className="reveal-logo" />
         <p className="reveal-sticker">Midhun Raj | Digital Portfolio</p>
+        <HeroCtaButtons />
         <p className="reveal-stage-kicker">Midhun Raj · MJ</p>
       </section>
 
@@ -341,11 +375,11 @@ export default function Page() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.25 }}
       >
-        <p className="identity-line">AI Product Engineer. Creative Technologist. Violin-first builder.</p>
+        <p className="identity-line">AI Product Engineer · Creative Technologist · Violin-first builder</p>
         <div className="identity-tags" aria-label="Identity tags">
-          <span className="identity-tag">Realtime Interfaces</span>
+          <span className="identity-tag">Product-First Engineering</span>
           <span className="identity-tag">Carnatic Audio Systems</span>
-          <span className="identity-tag">Cinematic Product Design</span>
+          <span className="identity-tag">Interactive Product Design</span>
         </div>
       </motion.section>
 
@@ -357,10 +391,10 @@ export default function Page() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.25 }}
       >
-        <p className="readme-title">From my GitHub README</p>
-        <p className="equation-line">½ Developer + ½ Event Organiser + ½ Musician = Me.</p>
-        <p className="vibe-line">Fusing Code, Design, and Carnatic Music. I build precise, production-ready systems that feature playful, highly interactive user interfaces.</p>
-        <p className="thought-line">“I’ll sleep early tonight” usually becomes debugging code or arranging chords at 2 AM.</p>
+        <p className="readme-title">How I Work</p>
+        <p className="equation-line">Discover → Build → Test → Refine.</p>
+        <p className="vibe-line">I combine system thinking, product design, and audio intuition to ship experiences that are both technical and human.</p>
+        <p className="thought-line">Best sessions usually happen where architecture decisions and interface details meet.</p>
 
         <div className="toolbox-grid" aria-label="Tech toolbox marquee">
           <Marquee speed={42} gradient={false} pauseOnHover>
@@ -395,6 +429,7 @@ export default function Page() {
       </motion.section>
 
       <motion.section
+        id="selected-work"
         className="projects-block"
         aria-label="Selected project previews"
         variants={fadeInUp}
@@ -404,46 +439,30 @@ export default function Page() {
       >
         <div className="projects-head">
           <p>Selected Work</p>
-          <h2>Interactive previews over long explanations.</h2>
+          <h2>Each project shows the problem, approach, and outcome.</h2>
         </div>
 
         <div className="projects-grid">
           {projects.map((project) => (
-            <article
+            <ProjectCard
               key={project.id}
-              className={`project-card${activeProject === project.id ? " is-active" : ""}`}
-              onMouseEnter={() => {
+              project={project}
+              isActive={activeProject === project.id}
+              onActivate={() => {
                 setActiveProject(project.id);
               }}
-              onFocus={() => {
-                setActiveProject(project.id);
+              onOpen={(selectedProject) => {
+                setSpotlightProject(selectedProject);
               }}
-              tabIndex={0}
-              aria-label={project.name}
-            >
-              <span className="goofy-spark gs-1" aria-hidden="true" />
-              <span className="goofy-spark gs-2" aria-hidden="true" />
-              <p className="project-name">{project.name}</p>
-              <div className="project-reveal-wrap">
-                <h3>{project.line}</h3>
-                <p className="project-mood">{project.mood}</p>
-                <div className="project-preview" aria-hidden="true">
-                  <div className="preview-panel">
-                    <span>{project.previewA}</span>
-                    <div className="preview-wave" />
-                  </div>
-                  <div className="preview-panel alt">
-                    <span>{project.previewB}</span>
-                    <div className="preview-grid-scan" />
-                  </div>
-                </div>
-              </div>
-            </article>
+            />
           ))}
         </div>
       </motion.section>
 
+      <ScrollStoryTimeline projects={projects} />
+
       <motion.section
+        id="community"
         className="community-block"
         aria-label="Community orchestration"
         variants={fadeInUp}
@@ -452,7 +471,7 @@ export default function Page() {
         viewport={{ once: true, amount: 0.25 }}
       >
         <p className="community-title">Building Community / Orchestrating Events</p>
-        <p className="community-sub">Designing real-world momentum, with just the right amount of chaos.</p>
+        <p className="community-sub">Creating spaces where builders collaborate, prototype, and present fast.</p>
         <div className="community-strip" aria-label="Community highlights">
           {communityMoments.map((moment) => (
             <span key={moment} className="community-chip">
@@ -460,10 +479,10 @@ export default function Page() {
             </span>
           ))}
         </div>
-        <p className="community-note">For college fests, chapter ecosystems, and hack nights where ideas become demos overnight.</p>
+        <p className="community-note">From chapter events to hack nights, I focus on structure, energy, and execution.</p>
       </motion.section>
 
-      <footer className="cine-contact" aria-label="Contact">
+      <footer id="contact" className="cine-contact" aria-label="Contact">
         <div className="contact-objects" aria-hidden="true">
           <span className="contact-comet-track">
             <span className="contact-comet" />
@@ -474,7 +493,7 @@ export default function Page() {
 
         <div className="contact-panel">
           <p className="contact-kicker">Contact</p>
-          <h3>Open for sharp product collaborations.</h3>
+          <h3>Open to product builds, AI systems work, and creative tech collaborations.</h3>
           <div className="contact-tags" aria-label="Availability tags">
             <span>Freelance</span>
             <span>Collaborations</span>
@@ -499,6 +518,13 @@ export default function Page() {
           </div>
         </div>
       </footer>
+
+      <ProjectSpotlightModal
+        project={spotlightProject}
+        onClose={() => {
+          setSpotlightProject(null);
+        }}
+      />
     </main>
   );
 }

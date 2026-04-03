@@ -1,6 +1,6 @@
 {
   "name": "portfolio-os",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
-    "gsap": "^3.12.2",
     "next": "14.2.32",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-fast-marquee": "^1.6.5",
-    "tone": "^14.8.49",
     "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
   }
 }
